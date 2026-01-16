@@ -14,13 +14,21 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-08-26',
   studio: {
     route: '/admin',
+    dev: false,
+    auth: {
+      github: {
+        clientId: 'placeholder',
+        clientSecret: 'placeholder',
+      },
+    },
     repository: {
-      provider: 'github',
-      owner: 'nuxt-content',
-      repo: 'studio',
+      provider: 'azure-devops',
+      organization: 'annexiosrc', // Azure DevOps organization name
+      project: 'Annexio', // Azure DevOps project name
+      repo: 'nuxt-studio', // Repository name
+      owner: 'annexiosrc', // Same as organization
       branch: 'main',
       rootDir: 'playground/docus',
-      private: false,
     },
   },
 })
