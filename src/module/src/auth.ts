@@ -5,10 +5,10 @@ const logger = useLogger('nuxt-studio')
 
 export function validateAuthConfig(options: ModuleOptions): void {
   const provider = options.repository?.provider || 'github'
-  const providerUpperCase = provider.toUpperCase()
+  const providerUpperCase = provider.toUpperCase().replace('-', '_')
 
   // Git Token is enough for custom authentication
-  const hasGitToken = process.env.STUDIO_GITHUB_TOKEN || process.env.STUDIO_GITLAB_TOKEN
+  const hasGitToken = process.env.STUDIO_GITHUB_TOKEN || process.env.STUDIO_GITLAB_TOKEN || process.env.STUDIO_AZURE_DEVOPS_TOKEN
   if (hasGitToken) {
     return
   }
@@ -37,15 +37,28 @@ export function validateAuthConfig(options: ModuleOptions): void {
       ].join(' '))
     }
   }
-  // Google OAuth disabled => GitHub or GitLab OAuth required
+  // Google OAuth disabled => GitHub, GitLab, or Azure DevOps OAuth/PAT required
   else {
-    const missingProviderEnv = provider === 'github' ? !hasGitHubAuth : !hasGitLabAuth
+    const missingProviderEnv = provider === 'github'
+      ? !hasGitHubAuth
+      : provider === 'gitlab'
+        ? !hasGitLabAuth
+        : true // azure-devops only supports PAT
+
     if (missingProviderEnv) {
-      logger.error([
-        `In order to authenticate users, you need to set up a ${providerUpperCase} OAuth application.`,
-        `Please set the \`STUDIO_${providerUpperCase}_CLIENT_ID\` and \`STUDIO_${providerUpperCase}_CLIENT_SECRET\` environment variables,`,
-        `Alternatively, you can set up a Google OAuth application and set the \`STUDIO_GOOGLE_CLIENT_ID\` and \`STUDIO_GOOGLE_CLIENT_SECRET\` environment variables alongside with \`STUDIO_${providerUpperCase}_TOKEN\` to push changes to the repository.`,
-      ].join(' '))
+      if (provider === 'azure-devops') {
+        logger.error([
+          `Azure DevOps provider only supports PAT authentication.`,
+          `Please set the \`STUDIO_AZURE_DEVOPS_TOKEN\` environment variable with your Azure DevOps PAT token.`,
+        ].join(' '))
+      }
+      else {
+        logger.error([
+          `In order to authenticate users, you need to set up a ${providerUpperCase} OAuth application.`,
+          `Please set the \`STUDIO_${providerUpperCase}_CLIENT_ID\` and \`STUDIO_${providerUpperCase}_CLIENT_SECRET\` environment variables,`,
+          `Alternatively, you can set up a Google OAuth application and set the \`STUDIO_GOOGLE_CLIENT_ID\` and \`STUDIO_GOOGLE_CLIENT_SECRET\` environment variables alongside with \`STUDIO_${providerUpperCase}_TOKEN\` to push changes to the repository.`,
+        ].join(' '))
+      }
     }
   }
 }

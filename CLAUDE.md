@@ -11,7 +11,7 @@ Nuxt Studio is an open-source, self-hostable Nuxt module that enables visual con
 - **Visual Editors**: TipTap-based Notion-like editor for Markdown with MDC component support, form-based editor for YAML/JSON
 - **Code Editor**: Monaco editor with syntax highlighting for direct file editing
 - **Real-time Preview**: See changes instantly on production website
-- **Git Integration**: Commits directly to GitHub/GitLab repositories
+- **Git Integration**: Commits directly to GitHub, GitLab, or Azure DevOps repositories
 - **Multi-provider Auth**: GitHub, GitLab, Google OAuth, or custom authentication
 - **Media Management**: Visual media library with drag-and-drop support
 - **Development Mode**: Local filesystem sync for development
@@ -79,12 +79,15 @@ export default defineNuxtConfig({
 
     // Git repository config (required for production)
     repository: {
-      provider: 'github',  // 'github' | 'gitlab'
+      provider: 'github',  // 'github' | 'gitlab' | 'azure-devops'
       owner: 'username',
       repo: 'repo-name',
       branch: 'main',
       rootDir: '',         // For monorepos
       private: true        // Request private repo access
+      // Azure DevOps specific (required when provider is 'azure-devops'):
+      // organization: 'your-org',
+      // project: 'your-project',
     },
 
     // i18n
@@ -124,21 +127,28 @@ STUDIO_GITLAB_MODERATORS=email1@example.com,email2@example.com  # Optional
 STUDIO_GOOGLE_CLIENT_ID=xxx
 STUDIO_GOOGLE_CLIENT_SECRET=xxx
 STUDIO_GOOGLE_MODERATORS=email1@example.com,email2@example.com  # Required!
-STUDIO_GITHUB_TOKEN=xxx  # or STUDIO_GITLAB_TOKEN
+STUDIO_GITHUB_TOKEN=xxx  # or STUDIO_GITLAB_TOKEN or STUDIO_AZURE_DEVOPS_TOKEN
 ```
 
 **Custom Auth** (requires PAT):
 ```bash
-STUDIO_GITHUB_TOKEN=xxx  # or STUDIO_GITLAB_TOKEN
+STUDIO_GITHUB_TOKEN=xxx  # or STUDIO_GITLAB_TOKEN or STUDIO_AZURE_DEVOPS_TOKEN
+```
+
+**Azure DevOps** (PAT only):
+```bash
+STUDIO_AZURE_DEVOPS_TOKEN=az_pat_YOUR_TOKEN_HERE
 ```
 
 ## Authentication vs Git Providers
 
 **Important distinction**:
 - **Auth Providers**: Control who can login (GitHub OAuth, GitLab OAuth, Google OAuth, Custom)
-- **Git Providers**: Control where content is committed (GitHub, GitLab)
+- **Git Providers**: Control where content is committed (GitHub, GitLab, Azure DevOps)
 
 You can mix and match: e.g., Google OAuth for auth + GitHub for Git operations (requires PAT).
+
+**Note**: Azure DevOps currently only supports PAT authentication (no OAuth).
 
 ## Development Workflow
 

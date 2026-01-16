@@ -1,6 +1,6 @@
 import { createSharedComposable } from '@vueuse/core'
 import type { GitOptions, GitProviderAPI, GitProviderType } from '../types'
-import { createGitHubProvider, createGitLabProvider, createNullProvider } from '../utils/providers'
+import { createGitHubProvider, createGitLabProvider, createAzureDevOpsProvider, createNullProvider } from '../utils/providers'
 
 function getProviderIcon(provider: GitProviderType | null): string {
   switch (provider) {
@@ -8,6 +8,8 @@ function getProviderIcon(provider: GitProviderType | null): string {
       return 'i-simple-icons:github'
     case 'gitlab':
       return 'i-simple-icons:gitlab'
+    case 'azure-devops':
+      return 'i-simple-icons:azuredevops'
     default:
       return 'i-simple-icons:git'
   }
@@ -19,6 +21,8 @@ function getProviderName(provider: GitProviderType | null): string {
       return 'GitHub'
     case 'gitlab':
       return 'GitLab'
+    case 'azure-devops':
+      return 'Azure DevOps'
     default:
       return 'Local'
   }
@@ -30,6 +34,8 @@ function createProvider(provider: GitProviderType | null, options: GitOptions): 
       return createGitLabProvider(options)
     case 'github':
       return createGitHubProvider(options)
+    case 'azure-devops':
+      return createAzureDevOpsProvider(options)
     default:
       return createNullProvider(options)
   }

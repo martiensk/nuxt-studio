@@ -21,7 +21,7 @@ https://github.com/user-attachments/assets/39bf4250-e72b-45aa-bf6d-9441a38cb2d5
 - 🔑 **Custom Authentication** - Utilities for implementing your own auth flow (password, SSO, LDAP)
 - 📝 **File Management** - Create, edit, delete, and rename content files (`content/` directory)
 - 🖼️ **Media Management** - Centralized media library with support for JPEG, PNG, GIF, WebP, AVIF, SVG, and more
-- 🌳 **Git Integration** - Commit changes directly from your production website and just wait your CI/CD pipeline to deploy your changes
+- 🌳 **Git Integration** - Commit changes directly to GitHub, GitLab, or Azure DevOps from your production website
 - 🚀 **Development Mode** - Directly edit your content files and media files in your local filesystem using the module interface
 - 🌍 **22 Languages** - Full i18n support (AR, BG, CS, DE, EN, ES, FA, FI, FR, ID, IT, JA, KO, NB-NO, NL, NN-NO, PL, PT-BR, RU, UA, ZH, ZH-TW)
 
@@ -72,8 +72,8 @@ export default defineNuxtConfig({
     
     // Git repository configuration (owner and repo are required)
     repository: {
-      provider: 'github', // 'github' or 'gitlab'
-      owner: 'your-username', // your GitHub/GitLab username or organization
+      provider: 'github', // 'github', 'gitlab', or 'azure-devops'
+      owner: 'your-username', // your GitHub/GitLab username or Azure DevOps organization
       repo: 'your-repo', // your repository name
       branch: 'main', // the branch to commit to (default: main)
     }
@@ -87,7 +87,7 @@ To enable publishing directly from your production website, you need to configur
 
 #### Git Provider
 
-Configure where your content is stored (GitHub or GitLab repository). See the [repository configuration](#configuration-options) above.
+Configure where your content is stored (GitHub, GitLab, or Azure DevOps repository). See the [repository configuration](#configuration-options) above.
 
 > [📖 Git Providers Documentation](https://nuxt.studio/git-providers)
 
@@ -121,12 +121,15 @@ export default defineNuxtConfig({
 
     // Git repository configuration
     repository: {
-      provider: 'github', // 'github' or 'gitlab' (default: 'github')
-      owner: 'your-username', // your GitHub/GitLab owner (required)
+      provider: 'github', // 'github', 'gitlab', or 'azure-devops' (default: 'github')
+      owner: 'your-username', // your GitHub/GitLab username or Azure DevOps organization (required)
       repo: 'your-repo', // your repository name (required)
       branch: 'main', // branch to commit to (default: 'main')
       rootDir: '', // subdirectory for monorepos (default: '')
       private: true, // request access to private repos (default: true)
+      // Azure DevOps specific (required when provider is 'azure-devops'):
+      // organization: 'your-org', // Azure DevOps organization name
+      // project: 'your-project', // Azure DevOps project name
     },
   }
 })

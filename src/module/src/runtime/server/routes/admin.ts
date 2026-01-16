@@ -13,8 +13,9 @@ export default eventHandler((event) => {
   const hasGithub = process.env.STUDIO_GITHUB_CLIENT_ID && 'github'
   const hasGitlab = process.env.STUDIO_GITLAB_APPLICATION_ID && 'gitlab'
   const hasGoogle = process.env.STUDIO_GOOGLE_CLIENT_ID && 'google'
+  const hasAzureDevOps = process.env.STUDIO_AZURE_DEVOPS_TOKEN && 'azure-devops'
 
-  const providers = [hasGithub, hasGitlab, hasGoogle].filter(Boolean)
+  const providers = [hasGithub, hasGitlab, hasGoogle, hasAzureDevOps].filter(Boolean)
   if (providers.length === 0) {
     throw createError({
       statusCode: 404,

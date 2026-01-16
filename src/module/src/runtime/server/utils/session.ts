@@ -14,15 +14,20 @@ interface StudioUserSession {
 
 const requiredUserFields: Array<keyof StudioUser> = ['name', 'email']
 
+// Local extension to allow Azure DevOps provider during transition of generated types
+type StudioProviderType = GitProviderType | 'azure-devops'
+
 export async function setStudioUserSession(event: H3Event, userSession: StudioUserSession) {
   const config = useRuntimeConfig().public
-  const provider = config.studio.repository.provider as GitProviderType
+  const provider = config.studio.repository.provider as StudioProviderType
   const accessToken
     = provider === 'github'
       ? process.env.STUDIO_GITHUB_TOKEN
       : provider === 'gitlab'
         ? process.env.STUDIO_GITLAB_TOKEN
-        : null
+        : provider === 'azure-devops'
+          ? process.env.STUDIO_AZURE_DEVOPS_TOKEN
+          : null
 
   if (!accessToken) {
     throw createError({
@@ -33,7 +38,7 @@ export async function setStudioUserSession(event: H3Event, userSession: StudioUs
 
   await setInternalStudioUserSession(event, {
     ...userSession,
-    provider,
+    provider: provider as StudioUser['provider'],
     accessToken,
   })
 }

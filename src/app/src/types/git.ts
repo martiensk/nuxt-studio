@@ -1,7 +1,7 @@
 import type { DraftStatus } from './draft'
 import type { StudioFeature } from '../types'
 
-export type GitProviderType = 'github' | 'gitlab'
+export type GitProviderType = 'github' | 'gitlab' | 'azure-devops'
 
 export interface Repository {
   provider: GitProviderType | null
@@ -14,6 +14,16 @@ export interface Repository {
    * @default 'https://gitlab.com'
    */
   instanceUrl?: string
+  /**
+   * Azure DevOps organization name.
+   * Required when provider is 'azure-devops'.
+   */
+  organization?: string
+  /**
+   * Azure DevOps project name.
+   * Required when provider is 'azure-devops'.
+   */
+  project?: string
 }
 
 export interface GitBaseOptions {
@@ -22,6 +32,8 @@ export interface GitBaseOptions {
   branch: string
   authorName: string
   authorEmail: string
+  organization?: string
+  project?: string
 }
 
 export interface GitOptions extends GitBaseOptions {
@@ -88,4 +100,18 @@ export interface GitLabFile extends GitFile {
   blob_id: string
   commit_id: string
   last_commit_id: string
+}
+
+export interface AzureDevOpsFile extends GitFile {
+  objectId: string
+  gitObjectType: string
+  commitId: string
+  path: string
+}
+
+export interface AzureDevOpsFile extends GitFile {
+  objectId: string
+  gitObjectType: string
+  commitId: string
+  path: string
 }
