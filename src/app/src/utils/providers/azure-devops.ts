@@ -55,10 +55,11 @@ export function createAzureDevOpsProvider(options: GitOptions): GitProviderAPI {
   })
 
   async function fetchFile(path: string, { cached = false }: { cached?: boolean } = {}): Promise<GitFile | null> {
-    path = joinURL(rootDir, path)
-    console.log('[Azure DevOps] Fetching file:', path, { cached })
+    // Build full path: rootDir + relative path
+    const fullPath = rootDir ? `${rootDir}/${path}` : path
+    console.log('[Azure DevOps] Fetching file:', fullPath, { cached, rootDir, relativePath: path })
     if (cached) {
-      const file = gitFiles[path]
+      const file = gitFiles[fullPath]
       if (file) {
         console.log('[Azure DevOps] File found in cache')
         return file
@@ -71,7 +72,7 @@ export function createAzureDevOpsProvider(options: GitOptions): GitProviderAPI {
       // GET https://dev.azure.com/{organization}/{project}/_apis/git/repositories/{repositoryId}/items?path={path}&api-version=7.1
       const response = await $api(`/git/repositories/${repo}/items`, {
         query: {
-          'path': `/${path}`,
+          'path': `/${fullPath}`,
           'api-version': '7.1',
           'includeContent': true,
           'versionDescriptor': {
@@ -83,8 +84,8 @@ export function createAzureDevOpsProvider(options: GitOptions): GitProviderAPI {
 
       const gitFile: GitFile = {
         provider: 'azure-devops' as const,
-        name: path.split('/').pop() || path,
-        path,
+        name: fullPath.split('/').pop() || fullPath,
+        path: fullPath,
         sha: response.objectId,
         size: response.size,
         url: response.url,
@@ -94,7 +95,7 @@ export function createAzureDevOpsProvider(options: GitOptions): GitProviderAPI {
 
       console.log('[Azure DevOps] File fetched successfully:', { size: response.size })
       if (cached) {
-        gitFiles[path] = gitFile
+        gitFiles[fullPath] = gitFile
       }
       return gitFile
     }
@@ -102,16 +103,16 @@ export function createAzureDevOpsProvider(options: GitOptions): GitProviderAPI {
       // Azure DevOps API error handling
       const azError = error as AzureDevOpsError
       if (azError?.status === 404 || azError?.data?.typeKey === 'GitItemNotFoundException') {
-        console.warn(`[Azure DevOps] File not found: ${path}`)
+        console.warn(`[Azure DevOps] File not found: ${fullPath}`)
         return null
       }
 
       // Azure DevOps specific error formatting
       const errorMessage = azError?.data?.message || azError?.message || 'Unknown error'
-      console.error(`[Azure DevOps] Failed to fetch file ${path}:`, { status: azError?.status, message: errorMessage, typeKey: azError?.data?.typeKey })
+      console.error(`[Azure DevOps] Failed to fetch file ${fullPath}:`, { status: azError?.status, message: errorMessage, typeKey: azError?.data?.typeKey })
 
       if (process.env.NODE_ENV === 'development') {
-        alert(`Failed to fetch file: ${path}\n${errorMessage}`)
+        alert(`Failed to fetch file: ${fullPath}\n${errorMessage}`)
       }
 
       return null
