@@ -45,18 +45,6 @@ export declare const VirtualMediaCollectionName: "public-assets";
 export { }
 
 
-declare module '@tiptap/core' {
-    interface Commands<ReturnType> {
-        Video: {
-            /**
-             * Add video element
-             */
-            addVideo: () => ReturnType;
-        };
-    }
-}
-
-
 declare module '@tiptap/vue-3' {
     interface Commands<ReturnType> {
         videoPicker: {
@@ -66,19 +54,19 @@ declare module '@tiptap/vue-3' {
 }
 
 
-declare module '@tiptap/core' {
+declare module '@tiptap/vue-3' {
     interface Commands<ReturnType> {
-        Element: {
-            setElement: (tag: string, slot?: string) => ReturnType;
+        imagePicker: {
+            insertImagePicker: () => ReturnType;
         };
     }
 }
 
 
-declare module '@tiptap/vue-3' {
+declare module '@tiptap/core' {
     interface Commands<ReturnType> {
-        imagePicker: {
-            insertImagePicker: () => ReturnType;
+        Element: {
+            setElement: (tag: string, slot?: string) => ReturnType;
         };
     }
 }
@@ -103,6 +91,18 @@ declare module '@tiptap/core' {
              * Toggle a InlineElement
              */
             setInlineElement: (tag: string) => ReturnType;
+        };
+    }
+}
+
+
+declare module '@tiptap/core' {
+    interface Commands<ReturnType> {
+        Video: {
+            /**
+             * Add video element
+             */
+            addVideo: () => ReturnType;
         };
     }
 }

@@ -75,10 +75,8 @@ export function createAzureDevOpsProvider(options: GitOptions): GitProviderAPI {
           'path': `/${fullPath}`,
           'api-version': '7.1',
           'includeContent': true,
-          'versionDescriptor': {
-            version: branch,
-            versionType: 'branch',
-          },
+          'versionDescriptor.version': branch,
+          'versionDescriptor.versionType': 'branch',
         },
       })
 
