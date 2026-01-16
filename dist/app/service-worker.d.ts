@@ -5,17 +5,11 @@ export { }
 
 declare module '@tiptap/core' {
     interface Commands<ReturnType> {
-        Element: {
-            setElement: (tag: string, slot?: string) => ReturnType;
-        };
-    }
-}
-
-
-declare module '@tiptap/vue-3' {
-    interface Commands<ReturnType> {
-        imagePicker: {
-            insertImagePicker: () => ReturnType;
+        Video: {
+            /**
+             * Add video element
+             */
+            addVideo: () => ReturnType;
         };
     }
 }
@@ -32,11 +26,17 @@ declare module '@tiptap/vue-3' {
 
 declare module '@tiptap/core' {
     interface Commands<ReturnType> {
-        Video: {
-            /**
-             * Add video element
-             */
-            addVideo: () => ReturnType;
+        Element: {
+            setElement: (tag: string, slot?: string) => ReturnType;
+        };
+    }
+}
+
+
+declare module '@tiptap/vue-3' {
+    interface Commands<ReturnType> {
+        imagePicker: {
+            insertImagePicker: () => ReturnType;
         };
     }
 }
@@ -49,6 +49,18 @@ declare module '@tiptap/core' {
              * Override backspace command
              */
             handleSlotBackspace: () => ReturnType;
+        };
+    }
+}
+
+
+declare module '@tiptap/core' {
+    interface Commands<ReturnType> {
+        InlineElement: {
+            /**
+             * Toggle a InlineElement
+             */
+            setInlineElement: (tag: string) => ReturnType;
         };
     }
 }
@@ -69,18 +81,6 @@ declare module '@tiptap/core' {
              * Remove the current span-style node (unwrap content)
              */
             unsetSpanStyle: () => ReturnType;
-        };
-    }
-}
-
-
-declare module '@tiptap/core' {
-    interface Commands<ReturnType> {
-        InlineElement: {
-            /**
-             * Toggle a InlineElement
-             */
-            setInlineElement: (tag: string) => ReturnType;
         };
     }
 }
